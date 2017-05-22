@@ -43,14 +43,14 @@ function inlineResources(projectPath) {
   return Promise.all(files.map(filePath => {
     const fullFilePath = path.join(projectPath, filePath);
     return readFile(fullFilePath, 'utf-8')
-      .then(content => inlineResourcesFromString(content, url => {
-        // Resolve the template url.
-        return path.join(path.dirname(fullFilePath), url);
-      }))
-      .then(content => writeFile(fullFilePath, content))
-      .catch(err => {
-        console.error('An error occured: ', err);
-      });
+        .then(content => inlineResourcesFromString(content, url => {
+          // Resolve the template url.
+          return path.join(path.dirname(fullFilePath), url);
+        }))
+        .then(content => writeFile(fullFilePath, content))
+        .catch(err => {
+          console.error('An error occured: ', err);
+        });
   }));
 }
 
@@ -81,8 +81,8 @@ function inlineTemplate(content, urlResolver) {
     const templateFile = urlResolver(templateUrl);
     const templateContent = fs.readFileSync(templateFile, 'utf-8');
     const shortenedTemplate = templateContent
-      .replace(/([\n\r]\s*)+/gm, ' ')
-      .replace(/"/g, '\\"');
+        .replace(/([\n\r]\s*)+/gm, ' ')
+        .replace(/"/g, '\\"');
     return `template: "${shortenedTemplate}"`;
   });
 }
@@ -97,19 +97,23 @@ function inlineTemplate(content, urlResolver) {
  */
 function inlineStyle(content, urlResolver) {
   return content.replace(/styleUrls:\s*(\[[\s\S]*?\])/gm, function (m, styleUrls) {
+
+    //less files should be changed to css at this point
+    styleUrls = styleUrls.replace(/\.less$/, '.css');
+
     const urls = eval(styleUrls);
     return 'styles: ['
-      + urls.map(styleUrl => {
-        const styleFile = urlResolver(styleUrl);
-        const originContent = fs.readFileSync(styleFile, 'utf-8');
-        const styleContent = styleFile.endsWith('.scss') ? buildSass(originContent, styleFile) : originContent;
-        const shortenedStyle = styleContent
-          .replace(/([\n\r]\s*)+/gm, ' ')
-          .replace(/"/g, '\\"');
-        return `"${shortenedStyle}"`;
-      })
-        .join(',\n')
-      + ']';
+        + urls.map(styleUrl => {
+          const styleFile = urlResolver(styleUrl);
+          const originContent = fs.readFileSync(styleFile, 'utf-8');
+          const styleContent = styleFile.endsWith('.scss') ? buildSass(originContent, styleFile) : originContent;
+          const shortenedStyle = styleContent
+              .replace(/([\n\r]\s*)+/gm, ' ')
+              .replace(/"/g, '\\"');
+          return `"${shortenedStyle}"`;
+        })
+            .join(',\n')
+        + ']';
   });
 }
 
