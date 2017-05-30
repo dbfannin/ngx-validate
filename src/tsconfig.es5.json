@@ -15,7 +15,10 @@
       "dom"
     ],
     "skipLibCheck": true,
-    "types": []
+    "types": [
+      "moment"
+    ],
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

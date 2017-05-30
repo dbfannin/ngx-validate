@@ -86,7 +86,8 @@ gulp.task('rollup:fesm', function () {
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#external
         external: [
           '@angular/core',
-          '@angular/common'
+          '@angular/common',
+            'moment'
         ],
 
         // Format of generated bundle
@@ -127,7 +128,7 @@ gulp.task('rollup:umd', function () {
         // The name to use for the module for UMD/IIFE bundles
         // (required for bundles with exports)
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#modulename
-        moduleName: '<%= props.libraryName.original %>',
+        moduleName: 'ngx-validate',
 
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#globals
         globals: {
@@ -135,7 +136,7 @@ gulp.task('rollup:umd', function () {
         }
 
       }))
-      .pipe(rename('<%= props.libraryName.kebabCase %>.umd.js'))
+      .pipe(rename('ngx-validate.umd.js'))
       .pipe(gulp.dest(distFolder));
 });
 
